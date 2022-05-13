@@ -2,6 +2,7 @@ export class Task {
   id: string;
   title: string;
   owner: string;
+  finished: boolean;
 
   attachments: Record<string, boolean>;
   lists: Record<string, boolean>;
@@ -15,6 +16,7 @@ export class Task {
     id: string,
     title: string,
     owner: string,
+    finished: boolean,
     attachments: Record<string, boolean>,
     lists: Record<string, boolean>,
     content?: string,
@@ -25,6 +27,7 @@ export class Task {
     this.id = id;
     this.title = title;
     this.owner = owner;
+    this.finished = finished;
     this.attachments = attachments;
     this.lists = lists;
     this.content = content;
@@ -38,6 +41,7 @@ export class Task {
       raw['id'],
       raw['title'],
       raw['owner'],
+      raw['finished'],
       raw['attachments'],
       raw['lists'],
       raw['content'],

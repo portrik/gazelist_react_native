@@ -1,12 +1,12 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React from "react";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import React from 'react';
 
 export interface AccountScreenProps {
-    navigation: NativeStackNavigationProp<any, any>;
+	navigation: NativeStackNavigationProp<any, any>;
 }
 
 const AccountScreen: React.FC<AccountScreenProps> = ({ navigation }) => {
-    return <></>
-}
+	return <></>;
+};
 
 export default AccountScreen;

@@ -10,13 +10,13 @@ export class DAO {
   async create(object: Record<string, any>) {
     await database()
       .ref(`${this.path}/${object['id']}`)
-      .set({...object});
+      .set({ ...object });
   }
 
   async update(object: Record<string, any>) {
     await database()
       .ref(`${this.path}/${object['id']}`)
-      .update({...object});
+      .update({ ...object });
   }
 
   async remove(object: Record<string, any>) {

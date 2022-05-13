@@ -8,27 +8,25 @@ import {TextInput, Button} from 'react-native-paper';
 const LoginScreen: React.FC<{
   navigation: NativeStackNavigationProp<any, any>;
 }> = ({navigation}) => {
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const _handleLogin = async () => {
     try {
-      if (email.error) {
-        throw new Error(email.error);
+      if (email.trim().length < 1) {
+        throw new Error('Email cannot be empty!');
       }
 
-      if (password.error) {
-        throw new Error(password.error);
+      if (password.length < 8) {
+        throw new Error('Password must be at least 8 characters long!');
       }
 
-      await auth().signInWithEmailAndPassword(
-        email.value.trim(),
-        password.value,
-      );
+      await auth().signInWithEmailAndPassword(email.trim(), password);
 
       navigation.replace('Main');
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 
@@ -39,9 +37,9 @@ const LoginScreen: React.FC<{
       <TextInput
         label="Email"
         returnKeyType="next"
-        value={email.value}
-        onChangeText={text => setEmail({value: text, error: ''})}
-        error={!!email.error}
+        value={email}
+        onChangeText={text => setEmail(text)}
+        error={error.trim().length > 1}
         autoCapitalize="none"
         autoComplete="email"
         textContentType="emailAddress"
@@ -51,11 +49,13 @@ const LoginScreen: React.FC<{
       <TextInput
         label="Password"
         returnKeyType="done"
-        value={password.value}
-        onChangeText={text => setPassword({value: text, error: ''})}
-        error={!!password.error}
+        value={password}
+        onChangeText={text => setPassword(text)}
+        error={error.trim().length > 1}
         secureTextEntry
       />
+
+      {error.trim().length > 0 && <Text>{error}</Text>}
 
       <Button mode="contained" onPress={_handleLogin}>
         Login
