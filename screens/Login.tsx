@@ -26,7 +26,7 @@ const LoginScreen: React.FC<{
         password.value,
       );
 
-      navigation.navigate('Home');
+      navigation.replace('Main');
     } catch (error) {
       console.log(error);
     }

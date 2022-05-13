@@ -37,7 +37,7 @@ const SignupScreen: React.FC<{
       const id = await dao.getNewId();
       await dao.create(new User(id, response.user.email as string));
 
-      navigation.navigate('Home');
+      navigation.replace('Home');
     } catch (error) {
       console.log(error);
     }

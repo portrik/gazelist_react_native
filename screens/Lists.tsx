@@ -19,14 +19,16 @@ const ListsScreen: React.FC<ListsScreenProps> = ({navigation}) => {
   useEffect(() => {
     new DAO('user')
       .getQuery()
-      .orderByChild('email')
+      .orderByChild('username')
       .equalTo(user?.email as string)
       .once('value')
-      .then(v => {
+      .then(value => {
+        const userId = Object.keys(value.val())[0];
+
         const onValueChange = listDao
           .getQuery()
           .orderByChild('users')
-          .orderByChild(user?.email as string)
+          .orderByChild(userId)
           .equalTo(true)
           .on('value', snapshot => {
             const newLists = (snapshot.val() as Record<string, any>[]).map(t =>
@@ -48,9 +50,15 @@ const ListsScreen: React.FC<ListsScreenProps> = ({navigation}) => {
 
   return (
     <>
-      {lists.map(l => (
-        <Text>{l.title}</Text>
-      ))}
+      {lists.length < 1 ? (
+        <Text>There are no task lists...</Text>
+      ) : (
+        <>
+          {lists.map(l => (
+            <Text>{l.title}</Text>
+          ))}
+        </>
+      )}
     </>
   );
 };

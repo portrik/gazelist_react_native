@@ -3,31 +3,37 @@ import React, {useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import {Button, TextInput} from 'react-native-paper';
 import {DAO, Task} from '../model';
+import {RouteProp} from '@react-navigation/native';
 
 export interface TaskProps {
   navigation: NativeStackNavigationProp<any, any>;
-  task?: Task;
+  route?: RouteProp<{params: {task: Task}}, 'params'>;
 }
 
-const TaskScreen: React.FC<TaskProps> = ({navigation, task}) => {
+const TaskScreen: React.FC<TaskProps> = ({navigation, route}) => {
+  const user = auth().currentUser;
+
   const [taskObject, setTaskObject] = useState<Task>(
-    task ?? new Task('', 'New Task', '', {}, {}),
+    route?.params?.task ?? new Task('', 'New Task', '', {}, {}),
   );
 
   const _handleSubmit = async () => {
     const dao = new DAO('task');
     const userDao = new DAO('user');
 
-    if (!task) {
+    if (!route?.params?.task) {
       const id = await dao.getNewId();
-      const user = auth().currentUser?.email as string;
       await userDao
         .getQuery()
-        .orderByChild('email')
-        .equalTo(user)
+        .orderByChild('username')
+        .equalTo(user?.email as string)
         .once('value')
-        .then(v => {
-          dao.create({...taskObject, id: id, user: v.key});
+        .then(value => {
+          dao.create({
+            ...taskObject,
+            id: id,
+            owner: Object.keys(value.val())[0],
+          });
         });
 
       navigation.goBack();
@@ -35,6 +41,7 @@ const TaskScreen: React.FC<TaskProps> = ({navigation, task}) => {
     }
 
     await dao.update({...taskObject});
+    navigation.goBack();
   };
 
   return (
