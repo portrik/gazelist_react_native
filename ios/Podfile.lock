@@ -416,12 +416,21 @@ PODS:
     - Firebase/Database (= 8.15.0)
     - React-Core
     - RNFBApp
+  - RNNotifee (5.2.2):
+    - React-Core
+    - RNNotifee/NotifeeCore (= 5.2.2)
+  - RNNotifee/NotifeeCore (5.2.2):
+    - React-Core
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
   - RNVectorIcons (9.1.0):
     - React-Core
   - SocketRocket (0.6.0)
+  - VisionCamera (2.13.3):
+    - React
+    - React-callinvoker
+    - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -485,8 +494,10 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBDatabase (from `../node_modules/@react-native-firebase/database`)"
+  - "RNNotifee (from `../node_modules/@notifee/react-native`)"
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -587,10 +598,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/auth"
   RNFBDatabase:
     :path: "../node_modules/@react-native-firebase/database"
+  RNNotifee:
+    :path: "../node_modules/@notifee/react-native"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  VisionCamera:
+    :path: "../node_modules/react-native-vision-camera"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -653,12 +668,14 @@ SPEC CHECKSUMS:
   RNFBApp: b6276fc67748c7174275cace56776f0228ae58b2
   RNFBAuth: fce6c25e6416660487ac620eac0343a555bb1812
   RNFBDatabase: 7ec57837a899dc0dca6184b86d017a30076a4d8a
+  RNNotifee: d90cdc08df61ace410b4f98aeff97a5ac12e2ce6
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
+  VisionCamera: c1c171fcdbf18c438987847f785829c5638f3a4c
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: b91bb2dc0b347d25c84253a32ba844cde08fc870
+PODFILE CHECKSUM: f7e3c10506aaf8a6a55c4f75031144274c8af71f
 
 COCOAPODS: 1.11.3

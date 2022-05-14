@@ -1,5 +1,9 @@
+import { StyleSheet } from 'react-native';
+import auth from '@react-native-firebase/auth';
 import React, { useMemo } from 'react';
-import { Card, Paragraph, Text, Title } from 'react-native-paper';
+import { Card, FAB, Paragraph, Title } from 'react-native-paper';
+
+import { theme } from '../state/theme';
 
 import { Task } from '../model';
 
@@ -7,11 +11,23 @@ export interface TaskSummaryProps {
 	tasks: Task[];
 }
 
+const styles = StyleSheet.create({
+	fab: {
+		position: 'absolute',
+		top: 5,
+		right: 5,
+		backgroundColor: theme.colors.text,
+	},
+});
+
+/**
+ * Card displaying the status on the main homepage.
+ */
 export const TaskSummary: React.FC<TaskSummaryProps> = ({ tasks }) => {
 	const tasksToday = useMemo(() => {
 		const today = new Date();
 		return tasks.filter(
-			t =>
+			(t) =>
 				t.timeNotification &&
 				t.timeNotification.getDate() === today.getDate() &&
 				t.timeNotification.getMonth() === today.getMonth() &&
@@ -24,7 +40,7 @@ export const TaskSummary: React.FC<TaskSummaryProps> = ({ tasks }) => {
 		tomorrow.setDate(tomorrow.getDate() + 1);
 
 		return tasks.filter(
-			t =>
+			(t) =>
 				t.timeNotification &&
 				t.timeNotification.getDate() === tomorrow.getDate() &&
 				t.timeNotification.getMonth() === tomorrow.getMonth() &&
@@ -40,16 +56,22 @@ export const TaskSummary: React.FC<TaskSummaryProps> = ({ tasks }) => {
 		end.setDate(end.getDate() + 14);
 
 		return tasks.filter(
-			t =>
+			(t) =>
 				t.timeNotification &&
-				t.timeNotification.getMilliseconds() > start.getMilliseconds() &&
-				t.timeNotification.getMilliseconds() < end.getMilliseconds(),
+				t.timeNotification.getTime() > start.getTime() &&
+				t.timeNotification.getTime() < end.getTime(),
 		).length;
 	}, [tasks]);
 
 	return (
-		<Card>
+		<Card style={{ backgroundColor: theme.colors.primary }}>
 			<Card.Content>
+				<FAB
+					icon="account"
+					style={styles.fab}
+					onPress={() => auth().signOut()}
+				/>
+
 				<Title>{tasksToday} Tasks Today</Title>
 
 				<Paragraph>{tasksTomorrow} Tasks Tomorrow</Paragraph>

@@ -36,6 +36,20 @@ export class Task {
     this.recurringTimeNotification = recurringTimeNotification;
   }
 
+  toJson(): Record<string, any> {
+    return {
+      id: this.id,
+      title: this.title,
+      owner: this.owner,
+      finished: this.finished,
+      attachments: { ...this.attachments },
+      lists: { ...this.lists },
+      content: this.content,
+      timeNotification: this.timeNotification?.getTime(),
+      recurringTimeNotification: this.recurringTimeNotification,
+    };
+  }
+
   static fromJson(raw: Record<string, any>): Task {
     return new Task(
       raw['id'],
@@ -46,7 +60,7 @@ export class Task {
       raw['lists'],
       raw['content'],
       raw['locationNotification'],
-      new Date(raw['timeNotification']),
+      raw['timeNotification'] ? new Date(raw['timeNotification']) : undefined,
       raw['recurringTimeNotification'],
     );
   }

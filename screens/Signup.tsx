@@ -1,95 +1,120 @@
 import React, { useState } from 'react';
 import auth from '@react-native-firebase/auth';
+import { Text, View, StyleSheet } from 'react-native';
+import { TextInput, Button, Title } from 'react-native-paper';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import { Text, TouchableOpacity, View } from 'react-native';
-import { TextInput, Button } from 'react-native-paper';
+import { theme } from '../state/theme';
 
 import { DAO, User } from '../model';
 
+const styles = StyleSheet.create({
+	container: {
+		padding: 20,
+		alignSelf: 'center',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: '100%',
+		height: '100%',
+		flex: 1,
+	},
+	content: {
+		width: '100%',
+		height: '100%',
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'space-around',
+		alignContent: 'space-around',
+	},
+	signup: {
+		width: '100%',
+		paddingBottom: 10,
+	},
+	error: {
+		color: 'red',
+	},
+	errorWrapper: {
+		height: '10%',
+	},
+});
+
+/**
+ * Screen handling the signup procedure.
+ */
 const SignupScreen: React.FC<{
 	navigation: NativeStackNavigationProp<any, any>;
 }> = ({ navigation }) => {
-	const [username, setUsername] = useState({ value: '', error: '' });
-	const [email, setEmail] = useState({ value: '', error: '' });
-	const [password, setPassword] = useState({ value: '', error: '' });
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
 
+	/**
+	 * Handler for the Firebase Authentication signup.
+	 */
 	const _handleSignIn = async () => {
 		try {
-			if (username.error) {
-				throw new Error(username.error);
+			if (email.trim().length < 1) {
+				throw new Error('Email cannot be empty!');
 			}
 
-			if (email.error) {
-				throw new Error(email.error);
-			}
-
-			if (password.error) {
-				throw new Error(password.error);
+			if (password.length < 8) {
+				throw new Error('Password must have at least 8 characters!');
 			}
 
 			const response = await auth().createUserWithEmailAndPassword(
-				email.value.trim(),
-				password.value,
+				email.trim(),
+				password,
 			);
 
 			const dao = new DAO('user');
 			const id = await dao.getNewId();
 			await dao.create(new User(id, response.user.email as string));
 
-			navigation.replace('Home');
-		} catch (error) {
-			console.log(error);
+			navigation.replace('Main');
+		} catch (err) {
+			setError((err as Error).message);
 		}
 	};
 
 	return (
-		<>
-			<Text>Create Account</Text>
+		<View style={styles.container}>
+			<View style={styles.content}>
+				<Title>Create Account</Title>
 
-			<TextInput
-				label="Username"
-				returnKeyType="next"
-				value={username.value}
-				onChangeText={text => setUsername({ value: text, error: '' })}
-				error={!!username.error}
-				autoCapitalize="none"
-				autoComplete="username-new"
-				textContentType="username"
-			/>
+				<TextInput
+					label="Email"
+					returnKeyType="next"
+					value={email}
+					onChangeText={(text) => setEmail(text)}
+					error={error.trim().length > 1}
+					autoCapitalize="none"
+					autoComplete="email"
+					textContentType="emailAddress"
+					keyboardType="email-address"
+					mode="outlined"
+					activeOutlineColor={theme.colors.text}
+				/>
 
-			<TextInput
-				label="Email"
-				returnKeyType="next"
-				value={email.value}
-				onChangeText={text => setEmail({ value: text, error: '' })}
-				error={!!email.error}
-				autoCapitalize="none"
-				autoComplete="email"
-				textContentType="emailAddress"
-				keyboardType="email-address"
-			/>
+				<TextInput
+					label="Password"
+					returnKeyType="done"
+					value={password}
+					onChangeText={(text) => setPassword(text)}
+					error={error.trim().length > 1}
+					secureTextEntry
+					mode="outlined"
+					activeOutlineColor={theme.colors.text}
+				/>
 
-			<TextInput
-				label="Password"
-				returnKeyType="done"
-				value={password.value}
-				onChangeText={text => setPassword({ value: text, error: '' })}
-				error={!!password.error}
-				secureTextEntry
-			/>
+				<View style={styles.errorWrapper}>
+					{error.trim().length > 0 && <Text style={styles.error}>{error}</Text>}
+				</View>
 
-			<Button mode="contained" onPress={_handleSignIn}>
-				Create Account
-			</Button>
-
-			<View>
-				<Text>Already have an account?</Text>
-				<TouchableOpacity onPress={() => navigation.navigate('Login')}>
-					<Text>Sign up</Text>
-				</TouchableOpacity>
+				<Button mode="contained" onPress={_handleSignIn}>
+					Create Account
+				</Button>
 			</View>
-		</>
+		</View>
 	);
 };
 
